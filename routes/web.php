@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
 
     // ? ROLE
     Route::match(['get', 'post'], '/role/listing', [RoleController::class, 'listing'])->name('roles.listing');
+    Route::match(['get', 'post'], '/role/add', [RoleController::class, 'add'])->name('roles.add');
+    Route::match(['get', 'post'], '/role/edit/{id}', [RoleController::class, 'edit'])->name('roles.edit');
     // ? PERMISSION
     Route::match(['get', 'post'], '/permission/listing')->name('permissions.listing');
 });

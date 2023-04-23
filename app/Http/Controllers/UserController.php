@@ -49,6 +49,8 @@ class UserController extends Controller
             $user->role = $request->role;
             $user->password = bcrypt("12341234");
             $user->save();
+
+            return redirect()->route('user.listing')->with('success', 'User added successfully!');
         }
 
         return view('user.form', [
