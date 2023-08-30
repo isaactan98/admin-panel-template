@@ -1,8 +1,6 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -11,36 +9,20 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
 |
 */
 
-Route::get('/', function () {
-    // return view('welcome');
-    return redirect()->route('login');
-});
+Auth::routes();
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'root'])->name('root');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+//Update User Details
+Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');
+Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('updatePassword');
 
-    Route::match(['get', 'post'], '/user/listing', [UserController::class, 'listing'])->name('user.listing');
-    Route::match(['get', 'post'], '/user/add', [UserController::class, 'add'])->name('user.add');
-    Route::match(['get', 'post'], '/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
-    Route::match(['get', 'post'], '/user/delete', [UserController::class, 'delete'])->name('user.delete');
+Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
 
-    // ? ROLE
-    Route::match(['get', 'post'], '/role/listing', [RoleController::class, 'listing'])->name('roles.listing');
-    Route::match(['get', 'post'], '/role/add', [RoleController::class, 'add'])->name('roles.add');
-    Route::match(['get', 'post'], '/role/edit/{id}', [RoleController::class, 'edit'])->name('roles.edit');
-    // ? PERMISSION
-    Route::match(['get', 'post'], '/permission/listing')->name('permissions.listing');
-});
-
-require __DIR__ . '/auth.php';
+//Language Translation
+Route::get('index/{locale}', [App\Http\Controllers\HomeController::class, 'lang']);
